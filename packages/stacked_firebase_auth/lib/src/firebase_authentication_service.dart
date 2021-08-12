@@ -195,6 +195,7 @@ class FirebaseAuthenticationService {
     } on FirebaseAuthException catch (e) {
       log?.e('A firebase exception has occured. $e');
       return FirebaseAuthenticationResult.error(
+          exceptionCode: e.code.toLowerCase(),
           errorMessage: getErrorMessageFromFirebaseException(e));
     } on Exception catch (e) {
       log?.e('A general exception has occured. $e');
@@ -227,6 +228,7 @@ class FirebaseAuthenticationService {
     } on FirebaseAuthException catch (e) {
       log?.e('A firebase exception has occured. $e');
       return FirebaseAuthenticationResult.error(
+          exceptionCode: e.code.toLowerCase(),
           errorMessage: getErrorMessageFromFirebaseException(e));
     } on Exception catch (e) {
       log?.e('A general exception has occured. $e');
@@ -255,6 +257,7 @@ class FirebaseAuthenticationService {
     } on FirebaseAuthException catch (e) {
       log?.e('A firebase exception has occured. $e');
       return FirebaseAuthenticationResult.error(
+          exceptionCode: e.code.toLowerCase(),
           errorMessage: getErrorMessageFromFirebaseException(e));
     } on Exception catch (e) {
       log?.e('A general exception has occured. $e');
@@ -267,7 +270,10 @@ class FirebaseAuthenticationService {
   Future<FirebaseAuthenticationResult> _handleAccountExists(
       FirebaseAuthException e) async {
     if (e.code != 'account-exists-with-different-credential') {
-      return FirebaseAuthenticationResult.error(errorMessage: e.toString());
+      return FirebaseAuthenticationResult.error(
+        exceptionCode: e.code.toLowerCase(),
+        errorMessage: e.toString(),
+      );
     }
 
     // The account already exists with a different credential
@@ -396,10 +402,12 @@ class FirebaseAuthenticationResult {
 
   /// Contains the error message for the request
   final String? errorMessage;
+  final String? exceptionCode;
 
   FirebaseAuthenticationResult({this.user}) : errorMessage = null;
 
-  FirebaseAuthenticationResult.error({this.errorMessage}) : user = null;
+  FirebaseAuthenticationResult.error({this.errorMessage, this.exceptionCode})
+      : user = null;
 
   /// Returns true if the response has an error associated with it
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
