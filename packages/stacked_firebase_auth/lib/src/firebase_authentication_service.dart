@@ -26,6 +26,7 @@ class FirebaseAuthenticationService {
   final String? _appleClientId;
 
   final firebaseAuth = FirebaseAuth.instance;
+
   final _googleSignIn = GoogleSignIn();
 
   FirebaseAuthenticationService({
